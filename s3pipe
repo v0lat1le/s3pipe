@@ -91,11 +91,10 @@ while True:
   if not args.quiet: sys.stderr.write("\npart %d: %.1f MB (%d bytes) read, sum: %.1f MB (%d bytes)\n" % (part_num, float(part_size)/MB, part_size, float(sum)/MB, sum))
   my_md5 = hashlib.md5(buf).hexdigest()
   sio = cStringIO.StringIO(buf)
-  mp.upload_part_from_file(sio,part_num)
-  part = mp.get_all_parts()[-1]
+  part = mp.upload_part_from_file(sio,part_num)
   their_md5 = part.etag[1:-1]
   if part.size == part_size and their_md5 == my_md5:
-    if not args.quiet: sys.stderr.write("part %d: %.1f MB (%d bytes) written, checksum ok\n" % (part.part_number, float(part.size)/MB, part.size))
+    if not args.quiet: sys.stderr.write("part %d: %.1f MB (%d bytes) written, checksum ok\n" % (part_num, float(part.size)/MB, part.size))
   else:
     mp.cancel_upload()
     bailout("checksum error, upload canceled\n")
